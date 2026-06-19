@@ -1,0 +1,44 @@
+body {
+    font-family: 'Fredoka', sans-serif;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(241, 241, 241, 0.5);
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+    border-radius: 10px;
+}
+
+.map-path {
+    stroke-dasharray: 8;
+    animation: dash 30s linear infinite;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: -1000;
+    }
+}
+
+.wheel-transition {
+    transition: transform 4.5s cubic-bezier(0.15, 0.95, 0.2, 1);
+}
+
+/* Electric dash circuit animation */
+.electric-flow {
+    stroke-dasharray: 6;
+    animation: electric 1.5s linear infinite;
+}
+
+@keyframes electric {
+    to {
+        stroke-dashoffset: -40;
+    }
+}

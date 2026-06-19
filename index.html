@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Energi Bersama Sahabat IPA - Kelas 4 SD</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Config Custom Colors & Fonts -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brandBlue: {
+                            light: '#60a5fa',
+                            DEFAULT: '#3b82f6',
+                            dark: '#1d4ed8',
+                        },
+                        brandGreen: {
+                            light: '#4ade80',
+                            DEFAULT: '#22c55e',
+                            dark: '#15803d',
+                        },
+                        brandYellow: {
+                            light: '#fde047',
+                            DEFAULT: '#eab308',
+                            dark: '#a16207',
+                        },
+                        brandOrange: {
+                            light: '#fb923c',
+                            DEFAULT: '#f97316',
+                            dark: '#c2410c',
+                        }
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'spin-fast': 'spin 1s linear infinite',
+                        'wiggle': 'wiggle 1s ease-in-out infinite',
+                        'float-slow': 'float 6s ease-in-out infinite',
+                        'float-medium': 'float 4s ease-in-out infinite',
+                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Google Fonts - Fredoka -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body
+    class="bg-blue-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col overflow-x-hidden selection:bg-brandYellow selection:text-slate-900">
+
+    <!-- BACKGROUND MUSIC -->
+    <audio id="bg-music" src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Life%20of%20Riley.mp3"
+        loop></audio>
+
+    <!-- NAVBAR UTAMA -->
+    <header
+        class="bg-white/90 dark:bg-slate-800/90 backdrop-blur sticky top-0 z-50 border-b-4 border-brandBlue shadow-md px-4 py-3 flex items-center justify-between transition-colors">
+        <div class="flex items-center space-x-3">
+            <div
+                class="bg-brandYellow text-slate-900 font-bold p-2.5 rounded-2xl shadow-inner flex items-center justify-center animate-bounce-slow">
+                <i data-lucide="zap" class="w-6 h-6 text-brandOrange fill-brandYellow"></i>
+            </div>
+            <div>
+                <h1
+                    class="text-lg md:text-xl font-extrabold text-brandBlue tracking-wide flex items-center gap-1 dark:text-brandBlue-light">
+                    SAHABAT <span class="text-brandGreen">IPA</span>
+                    <span
+                        class="text-xs bg-brandOrange text-white px-2 py-0.5 rounded-full uppercase tracking-widest hidden sm:inline-block">Kls
+                        4 SD</span>
+                </h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Petualangan Energi Hebat</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2 md:space-x-4">
+            <!-- Bintang Global -->
+            <div
+                class="flex items-center bg-brandYellow/20 dark:bg-brandYellow/10 text-brandYellow-dark dark:text-brandYellow border border-brandYellow/40 px-3 py-1.5 rounded-full font-bold text-sm shadow-sm">
+                <i data-lucide="star" class="w-5 h-5 mr-1 fill-brandYellow animate-pulse-fast"></i>
+                <span id="global-stars">0</span> <span class="hidden sm:inline ml-1">Bintang</span>
+            </div>
+
+            <!-- Level -->
+            <div
+                class="flex items-center bg-brandGreen/20 dark:bg-brandGreen/10 text-brandGreen-dark dark:text-brandGreen border border-brandGreen/40 px-3 py-1.5 rounded-full font-bold text-sm shadow-sm">
+                <i data-lucide="award" class="w-5 h-5 mr-1 text-brandGreen"></i>
+                Lv <span id="global-level">1</span>
+            </div>
+
+            <!-- BGM Toggle Button -->
+            <button onclick="toggleBGM()" id="bgm-toggle-btn"
+                class="p-2 mr-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-yellow-300 transition-colors shadow-sm"
+                title="Musik Latar">
+                <i id="bgm-icon" data-lucide="volume-x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Theme Switcher -->
+            <button onclick="toggleDarkMode()"
+                class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-yellow-300 transition-colors shadow-sm">
+                <i id="theme-icon" data-lucide="moon" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- KONTEN UTAMA GAME -->
+    <main class="flex-grow flex flex-col relative w-full max-w-5xl mx-auto px-4 py-6">
+
+        <!-- PROGRESS BAR UTAMA -->
+        <div
+            class="w-full bg-slate-200 dark:bg-slate-700 h-4 rounded-full mb-6 overflow-hidden shadow-inner border border-slate-300 dark:border-slate-600 relative">
+            <div id="main-progress-bar"
+                class="bg-gradient-to-r from-brandGreen via-brandYellow to-brandOrange h-full transition-all duration-500"
+                style="width: 7.1%;"></div>
+            <div
+                class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-slate-700 dark:text-slate-200 mix-blend-difference">
+                Misi Selesai: <span id="progress-percentage">7</span>%
+            </div>
+        </div>
+
+        <!-- HALAMAN 1: SELAMAT DATANG -->
+        <section id="page-1"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandBlue relative overflow-hidden flex flex-col md:flex-row gap-6 items-center">
+            <div class="absolute -top-10 -left-10 text-brandYellow opacity-10 animate-spin-slow">
+                <i data-lucide="sun" class="w-32 h-32"></i>
+            </div>
+
+            <!-- Kiri: Ibu Rezkya Nayla -->
+            <div class="w-full md:w-1/2 flex flex-col items-center text-center space-y-4">
+                <div
+                    class="relative w-48 h-48 flex items-center justify-center bg-sky-100 dark:bg-sky-950/40 rounded-full border-4 border-dashed border-sky-300 dark:border-sky-800 overflow-hidden shadow-inner">
+                    <div class="absolute top-2 right-2 text-brandYellow animate-spin-slow">
+                        <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM12 18.75a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1 .75-.75ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM5.25 12a.75.75 0 0 1-.75.75H2.25a.75.75 0 0 1 0-1.5H4.5a.75.75 0 0 1 .75.75ZM18.89 5.11a.75.75 0 0 1 0 1.06l-1.59 1.59a.75.75 0 1 1-1.06-1.06l1.59-1.59a.75.75 0 0 1 1.06 0ZM6.76 17.24a.75.75 0 0 1 0 1.06l-1.59 1.59a.75.75 0 1 1-1.06-1.06l1.59-1.59a.75.75 0 0 1 1.06 0ZM18.89 18.89a.75.75 0 0 1-1.06 0l-1.59-1.59a.75.75 0 0 1 1.06-1.06l1.59 1.59a.75.75 0 0 1 0 1.06ZM6.76 6.76a.75.75 0 0 1-1.06 0L4.11 5.17a.75.75 0 0 1 1.06-1.06l1.59 1.59a.75.75 0 0 1 0 1.06ZM12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z" />
+                        </svg>
+                    </div>
+                    <div class="absolute left-2 top-10 text-blue-300 dark:text-sky-700 animate-float-medium">
+                        <i data-lucide="cloud" class="w-8 h-8"></i>
+                    </div>
+
+                    <div class="z-10 text-center animate-wiggle">
+                        <!-- Hijab Guru Avatar -->
+                        <svg class="w-32 h-32 mx-auto" viewBox="0 0 100 100" fill="none">
+                            <path d="M50 15C32 15 22 25 22 45C22 65 30 85 50 85C70 85 78 65 78 45C78 25 68 15 50 15Z"
+                                fill="#a855f7" />
+                            <path d="M35 32C40 27 60 27 65 32" stroke="#f472b6" stroke-width="4"
+                                stroke-linecap="round" />
+                            <path d="M50 28C38 28 35 38 35 48C35 58 41 62 50 62C59 62 65 58 65 48C65 38 62 28 50 28Z"
+                                fill="#fed7aa" />
+                            <circle cx="43" cy="42" r="3" fill="#1e293b" />
+                            <circle cx="57" cy="42" r="3" fill="#1e293b" />
+                            <path d="M41 38C43 36 45 38 45 38" stroke="#1e293b" stroke-width="1.5"
+                                stroke-linecap="round" />
+                            <path d="M55 38C57 36 59 38 59 38" stroke="#1e293b" stroke-width="1.5"
+                                stroke-linecap="round" />
+                            <circle cx="39" cy="47" r="2.5" fill="#f43f5e" opacity="0.6" />
+                            <circle cx="61" cy="47" r="2.5" fill="#f43f5e" opacity="0.6" />
+                            <path d="M45 51C47 54 53 54 55 51" stroke="#be123c" stroke-width="3"
+                                stroke-linecap="round" />
+                            <g class="animate-bounce">
+                                <path d="M82 60C85 55 81 50 78 52C75 54 75 58 75 62L72 58" stroke="#fed7aa"
+                                    stroke-width="4" stroke-linecap="round" />
+                            </g>
+                            <path d="M42 62L50 75L58 62" fill="#d8b4fe" />
+                        </svg>
+                        <span
+                            class="block text-xs bg-purple-600 text-white font-extrabold px-3 py-1 rounded-full shadow -mt-2">IBU
+                            REZKYA NAYLA</span>
+                    </div>
+                    <div class="absolute bottom-0 w-full flex justify-around text-brandGreen-light">
+                        <i data-lucide="flower" class="w-5 h-5 animate-wiggle"></i>
+                        <i data-lucide="sprout" class="w-6 h-6 animate-bounce-slow"></i>
+                        <i data-lucide="flower" class="w-4 h-4 animate-wiggle"></i>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-blue-50 dark:bg-slate-700/50 rounded-2xl p-4 border-l-4 border-purple-500 max-w-md relative">
+                    <div
+                        class="absolute -left-3 top-5 w-0 h-0 border-y-8 border-y-transparent border-r-8 border-r-blue-50 dark:border-r-slate-700/50">
+                    </div>
+                    <p
+                        class="text-sm md:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-medium text-left">
+                        "Halo anak-anak hebat! Selamat datang di <strong>Petualangan Energi Bersama Sahabat
+                            IPA</strong>. Hari ini kita akan belajar sambil bermain dan menjelajahi dunia energi yang
+                        menakjubkan."
+                    </p>
+                </div>
+            </div>
+
+            <!-- Kanan: Pilih Karakter -->
+            <div class="w-full md:w-1/2 flex flex-col space-y-5">
+                <div class="text-center md:text-left">
+                    <h2 class="text-2xl font-black text-brandOrange tracking-wide">PILIH KARAKTER PETUALANGMU!</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Pilihlah salah satu sahabat untuk menemanimu
+                        berkelana!</p>
+                </div>
+
+                <div class="grid grid-cols-4 gap-3">
+                    <button onclick="selectAvatar('bumi', '🌍 Planet Bumi')"
+                        class="avatar-btn group p-2 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brandBlue dark:hover:border-brandBlue transition-all flex flex-col items-center bg-slate-50 dark:bg-slate-800 text-center relative">
+                        <div class="text-3xl md:text-4xl group-hover:scale-125 transition-transform duration-300">🌍
+                        </div>
+                        <span class="text-[10px] mt-1 font-bold">Bumi</span>
+                    </button>
+                    <button onclick="selectAvatar('bintang', '⭐ Bintang Energi')"
+                        class="avatar-btn group p-2 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brandYellow dark:hover:border-brandYellow transition-all flex flex-col items-center bg-slate-50 dark:bg-slate-800 text-center relative">
+                        <div class="text-3xl md:text-4xl group-hover:scale-125 transition-transform duration-300">⭐
+                        </div>
+                        <span class="text-[10px] mt-1 font-bold">Bintang</span>
+                    </button>
+                    <button onclick="selectAvatar('bulan', '🌙 Bulan Ceria')"
+                        class="avatar-btn group p-2 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-indigo-400 transition-all flex flex-col items-center bg-slate-50 dark:bg-slate-800 text-center">
+                        <div class="text-3xl md:text-4xl group-hover:scale-125 transition-transform duration-300">🌙
+                        </div>
+                        <span class="text-[10px] mt-1 font-bold">Bulan</span>
+                    </button>
+                    <button onclick="selectAvatar('matahari', '☀ Matahari Hebat')"
+                        class="avatar-btn group p-2 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brandOrange transition-all flex flex-col items-center bg-slate-50 dark:bg-slate-800 text-center">
+                        <div class="text-3xl md:text-4xl group-hover:scale-125 transition-transform duration-300">☀️
+                        </div>
+                        <span class="text-[10px] mt-1 font-bold">Matahari</span>
+                    </button>
+                    <button onclick="selectAvatar('roket', '🚀 Roket Explorer')"
+                        class="avatar-btn group p-2 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-red-400 transition-all flex flex-col items-center bg-slate-50 dark:bg-slate-800 text-center">
+                        <div class="text-3xl md:text-4xl group-hover:scale-125 transition-transform duration-300">🚀
+                        </div>
+                        <span class="text-[10px] mt-1 font-bold">Roket</span>
+                    </button>
+                    <button onclick="selectAvatar('saturnus', '🪐 Planet Saturnus')"
+                        class="avatar-btn group p-2 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-yellow-600 transition-all flex flex-col items-center bg-slate-50 dark:bg-slate-800 text-center">
+                        <div class="text-3xl md:text-4xl group-hover:scale-125 transition-transform duration-300">🪐
+                        </div>
+                        <span class="text-[10px] mt-1 font-bold">Saturnus</span>
+                    </button>
+                    <button onclick="selectAvatar('petir', '⚡ Petir Pintar')"
+                        class="avatar-btn group p-2 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brandYellow transition-all flex flex-col items-center bg-slate-50 dark:bg-slate-800 text-center">
+                        <div class="text-3xl md:text-4xl group-hover:scale-125 transition-transform duration-300">⚡
+                        </div>
+                        <span class="text-[10px] mt-1 font-bold">Petir</span>
+                    </button>
+                    <button onclick="selectAvatar('robot', '🔬 Robot IPA')"
+                        class="avatar-btn group p-2 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-teal-500 transition-all flex flex-col items-center bg-slate-50 dark:bg-slate-800 text-center">
+                        <div class="text-3xl md:text-4xl group-hover:scale-125 transition-transform duration-300">🔬
+                        </div>
+                        <span class="text-[10px] mt-1 font-bold">Robot</span>
+                    </button>
+                </div>
+
+                <div id="avatar-selection-feedback"
+                    class="text-center py-2 px-4 rounded-xl bg-slate-100 dark:bg-slate-700/60 hidden transition-all">
+                    Kamu memilih: <span id="selected-avatar-name" class="font-extrabold text-brandBlue"></span>! ✨
+                </div>
+
+                <button onclick="goToPage(2)" id="start-adventure-btn" disabled
+                    class="w-full bg-gradient-to-r from-brandOrange to-brandYellow text-white font-extrabold text-lg py-4 rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] transform transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider flex items-center justify-center gap-2">
+                    <i data-lucide="play" class="w-6 h-6 fill-white"></i> Mulai Petualangan
+                </button>
+            </div>
+        </section>
+
+        <!-- HALAMAN 2: ABSENSI INTERAKTIF -->
+        <section id="page-2"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandGreen relative overflow-hidden hidden flex-col md:flex-row gap-8 items-center">
+            <div class="absolute -bottom-10 -right-10 text-brandGreen opacity-10 animate-pulse-fast">
+                <i data-lucide="sprout" class="w-32 h-32"></i>
+            </div>
+
+            <div class="w-full md:w-1/2 space-y-4">
+                <div>
+                    <span
+                        class="bg-brandGreen/15 text-brandGreen dark:text-brandGreen-light px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Langkah
+                        2: Absensi</span>
+                    <h2 class="text-2xl md:text-3xl font-black text-brandGreen mt-2 tracking-wide">Daftarkan Dirimu!
+                    </h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Isi data dirimu dengan lengkap agar Ibu Guru
+                        Rezkya bisa mencatat kehadiranmu.</p>
+                </div>
+
+                <form id="attendance-form" onsubmit="submitAttendance(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Nama
+                            Lengkap</label>
+                        <input type="text" id="student-name" required placeholder="Tulis namamu disini..."
+                            class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-brandGreen focus:outline-none font-bold text-slate-800 dark:text-white">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Nomor
+                                Absen</label>
+                            <input type="number" id="student-number" required placeholder="Contoh: 12"
+                                class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-brandGreen focus:outline-none font-bold text-slate-800 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Kelas</label>
+                            <select id="student-class"
+                                class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-brandGreen focus:outline-none font-bold text-slate-800 dark:text-white">
+                                <option value="4-A">Kelas 4 A</option>
+                                <option value="4-B">Kelas 4 B</option>
+                                <option value="4-C">Kelas 4 C</option>
+                                <option value="4-D">Kelas 4 D</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Kehadiran</label>
+                        <div class="flex gap-2">
+                            <label
+                                class="flex-1 flex items-center justify-center p-3 rounded-xl border-2 border-brandGreen bg-brandGreen/5 font-extrabold cursor-pointer text-brandGreen">
+                                <input type="radio" name="attendance-status" value="Hadir" checked
+                                    class="mr-2 accent-brandGreen"> Hadir Ceria
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-gradient-to-r from-brandGreen to-emerald-500 text-white font-extrabold text-lg py-4 rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.01] transform transition-all cursor-pointer flex items-center justify-center gap-2">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i> Simpan & Ambil Bintang (+1 ⭐)
+                    </button>
+                </form>
+            </div>
+
+            <!-- Kanan: Upload Foto & Sticker -->
+            <div class="w-full md:w-1/2 flex flex-col items-center justify-center space-y-4">
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Ambil atau Unggah Fotomu
+                    (Opsional)</label>
+
+                <div
+                    class="relative w-64 h-64 bg-slate-100 dark:bg-slate-900 rounded-3xl border-4 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center overflow-hidden shadow-inner group">
+                    <video id="video-feed" class="hidden absolute inset-0 w-full h-full object-cover"></video>
+                    <canvas id="photo-canvas" class="hidden absolute inset-0 w-full h-full object-cover"></canvas>
+                    <img id="photo-preview" src="" class="hidden absolute inset-0 w-full h-full object-cover z-10">
+
+                    <div id="sticker-overlay"
+                        class="absolute inset-0 border-8 border-brandGreen rounded-3xl pointer-events-none z-20 hidden">
+                        <div
+                            class="absolute top-2 left-2 bg-yellow-400 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded-full shadow rotate-12">
+                            ⚡ Siap Belajar!</div>
+                        <div
+                            class="absolute bottom-2 right-2 bg-green-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow -rotate-6">
+                            🌱 Semangat Hari Ini!</div>
+                        <div
+                            class="absolute top-2 right-2 bg-orange-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">
+                            🌞 Hebat!</div>
+                    </div>
+
+                    <div id="upload-placeholder" class="text-center p-4 space-y-2">
+                        <i data-lucide="camera" class="w-12 h-12 text-slate-400 mx-auto animate-bounce-slow"></i>
+                        <p class="text-xs text-slate-500 font-medium">Bisa ambil langsung dari kamera atau upload file!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 w-full max-w-xs">
+                    <button id="btn-camera" onclick="startCamera()"
+                        class="flex-1 bg-brandBlue text-white font-bold text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 shadow hover:bg-brandBlue-dark">
+                        <i data-lucide="camera" class="w-4 h-4"></i> Kamera
+                    </button>
+                    <button id="btn-snap" onclick="takeSnapshot()"
+                        class="hidden flex-1 bg-brandOrange text-white font-bold text-xs py-2 px-3 rounded-xl items-center justify-center gap-1.5 shadow">
+                        <i data-lucide="aperture" class="w-4 h-4"></i> Ambil Foto
+                    </button>
+                    <label
+                        class="flex-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 shadow cursor-pointer text-center">
+                        <i data-lucide="upload" class="w-4 h-4"></i> Upload File
+                        <input type="file" accept="image/*" class="hidden" onchange="previewUploadedFile(event)">
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN 3: PETA PETUALANGAN UTAMA -->
+        <section id="page-3"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-xl border-t-8 border-brandYellow hidden flex-col space-y-6">
+            <div class="text-center">
+                <span
+                    class="bg-brandYellow/15 text-brandYellow-dark dark:text-brandYellow px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Peta
+                    Petualangan Utama</span>
+                <h2 class="text-2xl md:text-3xl font-black text-brandYellow-dark dark:text-brandYellow mt-2">IKUTI JALUR
+                    PETUALANGAN ENERGI</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Setiap pos petualangan akan membantumu memahami
+                    berbagai bentuk energi!</p>
+            </div>
+
+            <div
+                class="bg-emerald-50 dark:bg-emerald-950/20 border-4 border-brandGreen rounded-2xl p-4 relative min-h-[300px] flex flex-col justify-between overflow-hidden">
+                <svg
+                    class="absolute inset-0 w-full h-full pointer-events-none opacity-30 dark:opacity-15 hidden sm:block">
+                    <path d="M 50,50 L 250,80 L 150,180 L 450,220 L 750,150 L 650,280" fill="none" stroke="#22c55e"
+                        stroke-width="6" class="map-path" stroke-linecap="round" />
+                </svg>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 z-10">
+                    <!-- POS 1 -->
+                    <div
+                        class="p-3 bg-white dark:bg-slate-800 rounded-2xl border-4 border-brandGreen shadow-md flex items-center space-x-3">
+                        <div class="p-2 bg-brandGreen text-white rounded-lg"><i data-lucide="home" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold">1. Gerbang</h4>
+                            <span
+                                class="text-[10px] bg-brandGreen/10 text-brandGreen px-2 py-0.5 rounded font-extrabold uppercase">Selesai</span>
+                        </div>
+                    </div>
+
+                    <!-- POS 2 -->
+                    <div id="node-minigame"
+                        class="p-3 bg-white dark:bg-slate-800 rounded-2xl border-4 border-slate-300 dark:border-slate-700 shadow flex items-center space-x-3 transition-colors">
+                        <div class="node-icon-bg p-2 bg-slate-300 text-slate-600 rounded-lg"><i data-lucide="gamepad-2"
+                                class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold">2. Zona Game</h4>
+                            <span
+                                class="node-status text-[10px] bg-slate-100 dark:bg-slate-900 text-slate-500 px-2 py-0.5 rounded font-extrabold">Terkunci</span>
+                        </div>
+                    </div>
+
+                    <!-- POS 3 -->
+                    <div id="node-spinwheel"
+                        class="p-3 bg-white dark:bg-slate-800 rounded-2xl border-4 border-slate-300 dark:border-slate-700 shadow flex items-center space-x-3 transition-colors">
+                        <div class="node-icon-bg p-2 bg-slate-300 text-slate-600 rounded-lg"><i data-lucide="compass"
+                                class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold">3. Roda Energi</h4>
+                            <span
+                                class="node-status text-[10px] bg-slate-100 dark:bg-slate-900 text-slate-500 px-2 py-0.5 rounded font-extrabold">Terkunci</span>
+                        </div>
+                    </div>
+
+                    <!-- POS 4 -->
+                    <div id="node-apersepsi"
+                        class="p-3 bg-white dark:bg-slate-800 rounded-2xl border-4 border-slate-300 dark:border-slate-700 shadow flex items-center space-x-3 transition-colors">
+                        <div class="node-icon-bg p-2 bg-slate-300 text-slate-600 rounded-lg"><i
+                                data-lucide="help-circle" class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold">4. Pertanyaan</h4>
+                            <span
+                                class="node-status text-[10px] bg-slate-100 dark:bg-slate-900 text-slate-500 px-2 py-0.5 rounded font-extrabold">Terkunci</span>
+                        </div>
+                    </div>
+
+                    <!-- POS 5 -->
+                    <div id="node-video"
+                        class="p-3 bg-white dark:bg-slate-800 rounded-2xl border-4 border-slate-300 dark:border-slate-700 shadow flex items-center space-x-3 transition-colors">
+                        <div class="node-icon-bg p-2 bg-slate-300 text-slate-600 rounded-lg"><i data-lucide="video"
+                                class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold">5. Video Energi</h4>
+                            <span
+                                class="node-status text-[10px] bg-slate-100 dark:bg-slate-900 text-slate-500 px-2 py-0.5 rounded font-extrabold">Terkunci</span>
+                        </div>
+                    </div>
+
+                    <!-- POS 6 -->
+                    <div id="node-materi"
+                        class="p-3 bg-white dark:bg-slate-800 rounded-2xl border-4 border-slate-300 dark:border-slate-700 shadow flex items-center space-x-3 transition-colors">
+                        <div class="node-icon-bg p-2 bg-slate-300 text-slate-600 rounded-lg"><i data-lucide="book-open"
+                                class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold">6. Misi Belajar</h4>
+                            <span
+                                class="node-status text-[10px] bg-slate-100 dark:bg-slate-900 text-slate-500 px-2 py-0.5 rounded font-extrabold">Terkunci</span>
+                        </div>
+                    </div>
+
+                    <!-- POS 7 -->
+                    <div id="node-kuis"
+                        class="p-3 bg-white dark:bg-slate-800 rounded-2xl border-4 border-slate-300 dark:border-slate-700 shadow flex items-center space-x-3 transition-colors">
+                        <div class="node-icon-bg p-2 bg-slate-300 text-slate-600 rounded-lg"><i data-lucide="target"
+                                class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold">7. Tantangan</h4>
+                            <span
+                                class="node-status text-[10px] bg-slate-100 dark:bg-slate-900 text-slate-500 px-2 py-0.5 rounded font-extrabold">Terkunci</span>
+                        </div>
+                    </div>
+
+                    <!-- POS 8 -->
+                    <div id="node-sertifikat"
+                        class="p-3 bg-white dark:bg-slate-800 rounded-2xl border-4 border-slate-300 dark:border-slate-700 shadow flex items-center space-x-3 transition-colors">
+                        <div class="node-icon-bg p-2 bg-slate-300 text-slate-600 rounded-lg"><i data-lucide="award"
+                                class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold">8. Sertifikat</h4>
+                            <span
+                                class="node-status text-[10px] bg-slate-100 dark:bg-slate-900 text-slate-500 px-2 py-0.5 rounded font-extrabold">Terkunci</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="mt-8 flex flex-col sm:flex-row items-center justify-between bg-white/70 dark:bg-slate-800/70 p-4 rounded-xl border border-brandGreen">
+                    <p class="text-xs sm:text-sm font-semibold mb-3 sm:mb-0 text-slate-700 dark:text-slate-200">
+                        Ayo mulai petualanganmu sekarang! Kita akan langsung menuju <span
+                            class="text-brandGreen font-bold" id="current-target-node-text">Zona Permainan</span>.
+                    </p>
+                    <button onclick="startNextQuest()"
+                        class="bg-gradient-to-r from-brandGreen to-brandYellow text-white font-black px-6 py-3 rounded-xl shadow-md hover:scale-[1.02] active:scale-95 transition-all text-sm flex items-center gap-1">
+                        Mulai Petualangan <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN 4: MINI GAME PEMBUKA -->
+        <section id="page-4"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandBlue hidden flex-col space-y-6">
+            <div class="text-center">
+                <span
+                    class="bg-brandBlue/15 text-brandBlue dark:text-brandBlue-light px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Langkah
+                    3: Mini Game Pembuka</span>
+                <h2 class="text-2xl md:text-3xl font-black text-brandBlue mt-1">SAHABAT GAME ENERGI</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Selesaikan game ini untuk mengaktifkan energi
+                    kehidupan!</p>
+            </div>
+
+            <div id="game-arena"
+                class="bg-gradient-to-br from-indigo-50 to-blue-100 dark:from-slate-900 dark:to-slate-800 border-4 border-brandBlue rounded-3xl p-6 relative flex flex-col items-center justify-center min-h-[350px]">
+
+                <!-- GAME A: Menyiram Tanaman -->
+                <div id="game-siram-tanaman" class="hidden w-full max-w-md flex flex-col items-center space-y-4">
+                    <h3 class="font-extrabold text-lg text-brandBlue text-center">🌿 Energi Air untuk Tumbuhan</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 text-center">Klik tombol penyiram air beberapa
+                        kali untuk merangsang proses pertumbuhan tanaman dengan energi air dan fotosintesis matahari!
+                    </p>
+
+                    <div
+                        class="relative w-48 h-48 flex items-end justify-center overflow-hidden border-b-4 border-amber-600 pb-2">
+                        <div class="absolute bottom-0 w-32 h-6 bg-amber-800 rounded-t-xl z-10"></div>
+                        <div
+                            class="absolute bottom-0 w-24 h-16 bg-amber-500 rounded-b-xl z-20 border-t-4 border-amber-600">
+                        </div>
+
+                        <div id="plant-stage" class="z-10 transition-all duration-500 origin-bottom transform scale-50">
+                            <svg class="w-32 h-32" viewBox="0 0 100 100" fill="none">
+                                <path d="M50 85 V30" stroke="#16a34a" stroke-width="6" stroke-linecap="round" />
+                                <path d="M50 60 Q35 50 30 60 Q35 70 50 65" fill="#22c55e" />
+                                <path d="M50 45 Q65 35 70 45 Q65 55 50 50" fill="#22c55e" />
+                                <g id="flower-petals" class="opacity-0 transition-opacity duration-500">
+                                    <circle cx="50" cy="30" r="12" fill="#eab308" />
+                                    <circle cx="50" cy="15" r="10" fill="#f97316" />
+                                    <circle cx="50" cy="45" r="10" fill="#f97316" />
+                                    <circle cx="35" cy="30" r="10" fill="#f97316" />
+                                    <circle cx="65" cy="30" r="10" fill="#f97316" />
+                                    <circle cx="40" cy="20" r="8" fill="#fb923c" />
+                                    <circle cx="60" cy="20" r="8" fill="#fb923c" />
+                                    <circle cx="40" cy="40" r="8" fill="#fb923c" />
+                                    <circle cx="60" cy="40" r="8" fill="#fb923c" />
+                                </g>
+                            </svg>
+                        </div>
+
+                        <div id="water-drops"
+                            class="absolute top-4 inset-x-0 flex justify-center space-x-2 hidden opacity-0 z-30">
+                            <span class="animate-bounce text-2xl">💧</span>
+                            <span class="animate-bounce text-2xl [animation-delay:0.2s]">💧</span>
+                            <span class="animate-bounce text-2xl [animation-delay:0.4s]">💧</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center space-y-2 w-full">
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
+                            <div id="water-progress" class="bg-brandBlue h-full transition-all duration-300"
+                                style="width: 0%"></div>
+                        </div>
+                        <button onclick="pourWater()" id="btn-pour-water"
+                            class="bg-brandBlue hover:bg-brandBlue-dark text-white font-extrabold px-6 py-3 rounded-xl flex items-center gap-1.5 shadow active:scale-95 transition-all">
+                            <i data-lucide="droplet" class="w-5 h-5 fill-white"></i> Siram Tanaman (<span
+                                id="water-click-count">0</span>/5)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- GAME B: Menjodohkan Energi -->
+                <div id="game-jodohkan-energi" class="hidden w-full max-w-lg flex flex-col items-center space-y-4">
+                    <h3 class="font-extrabold text-lg text-brandOrange text-center">🎯 Jodohkan Energi dan Manfaatnya
+                    </h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 text-center">Hubungkan jenis energi (kiri)
+                        dengan fungsi kegunaan utamanya (kanan) dengan mengklik pasangan yang tepat!</p>
+
+                    <div class="flex flex-row justify-between w-full gap-4 mt-2">
+                        <!-- Sisi Kiri: Sumber -->
+                        <div class="flex flex-col gap-2 w-1/2">
+                            <button onclick="selectMatchingItem('source', 'matahari')" id="match-src-matahari"
+                                class="matching-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-300 text-sm font-bold flex items-center justify-between hover:border-brandYellow transition-all">
+                                <span>☀️ Matahari</span> <i data-lucide="chevron-right"
+                                    class="w-4 h-4 text-slate-400"></i>
+                            </button>
+                            <button onclick="selectMatchingItem('source', 'air')" id="match-src-air"
+                                class="matching-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-300 text-sm font-bold flex items-center justify-between hover:border-brandBlue transition-all">
+                                <span>💧 Air Mengalir</span> <i data-lucide="chevron-right"
+                                    class="w-4 h-4 text-slate-400"></i>
+                            </button>
+                            <button onclick="selectMatchingItem('source', 'angin')" id="match-src-angin"
+                                class="matching-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-300 text-sm font-bold flex items-center justify-between hover:border-brandGreen transition-all">
+                                <span>🌬 Angin Kencang</span> <i data-lucide="chevron-right"
+                                    class="w-4 h-4 text-slate-400"></i>
+                            </button>
+                            <button onclick="selectMatchingItem('source', 'listrik')" id="match-src-listrik"
+                                class="matching-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-300 text-sm font-bold flex items-center justify-between hover:border-brandOrange transition-all">
+                                <span>⚡ Listrik</span> <i data-lucide="chevron-right"
+                                    class="w-4 h-4 text-slate-400"></i>
+                            </button>
+                        </div>
+
+                        <!-- Sisi Kanan: Manfaat -->
+                        <div class="flex flex-col gap-2 w-1/2">
+                            <button onclick="selectMatchingItem('benefit', 'fotosintesis')" id="match-ben-fotosintesis"
+                                class="matching-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-300 text-xs font-bold text-left hover:border-brandYellow transition-all">
+                                Membantu fotosintesis tanaman & menjemur pakaian
+                            </button>
+                            <button onclick="selectMatchingItem('benefit', 'turbin')" id="match-ben-turbin"
+                                class="matching-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-300 text-xs font-bold text-left hover:border-brandGreen transition-all">
+                                Memutar kincir & turbin pembangkit listrik
+                            </button>
+                            <button onclick="selectMatchingItem('benefit', 'pltu')" id="match-ben-pltu"
+                                class="matching-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-300 text-xs font-bold text-left hover:border-brandBlue transition-all">
+                                Sumber utama Pembangkit Listrik Tenaga Air (PLTA)
+                            </button>
+                            <button onclick="selectMatchingItem('benefit', 'elektronik')" id="match-ben-elektronik"
+                                class="matching-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-300 text-xs font-bold text-left hover:border-brandOrange transition-all">
+                                Menyalakan TV, kipas angin, & mencharger HP
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="w-full text-center mt-3 text-xs font-extrabold text-slate-500">
+                        Skor Menjodohkan: <span id="match-score-text">0</span>/4 Selesai
+                    </div>
+                </div>
+
+                <div id="game-success-overlay"
+                    class="absolute inset-0 bg-brandBlue/95 dark:bg-slate-900/95 flex flex-col items-center justify-center p-6 text-center z-40 rounded-3xl hidden">
+                    <div class="text-6xl animate-bounce-slow">🎉</div>
+                    <h4 class="text-2xl font-black text-white mt-2">HEBAT & LUAR BIASA!</h4>
+                    <p class="text-sm text-yellow-200 mt-1 max-w-sm">Kamu berhasil menyelesaikan tantangan game ini dan
+                        membuktikan kehebatan energimu!</p>
+                    <div
+                        class="bg-yellow-400 text-slate-900 font-extrabold py-2 px-6 rounded-full mt-4 flex items-center gap-1.5 shadow-lg">
+                        <i data-lucide="star" class="w-5 h-5 fill-slate-900 text-slate-900"></i> +2 Bintang Energi
+                    </div>
+                    <button onclick="completeMiniGame()"
+                        class="mt-6 bg-brandGreen hover:bg-brandGreen-dark text-white font-extrabold py-3 px-8 rounded-2xl shadow-md flex items-center gap-1">
+                        Lanjutkan Perjalanan <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- HALAMAN 5: SPIN WHEEL ENERGI -->
+        <section id="page-5"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandYellow hidden flex-col space-y-6">
+            <div class="text-center">
+                <span
+                    class="bg-brandYellow/15 text-brandYellow-dark dark:text-brandYellow px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Langkah
+                    4: Roda Keberuntungan</span>
+                <h2 class="text-2xl md:text-3xl font-black text-brandYellow-dark dark:text-brandYellow mt-1">RODA
+                    KEBERUNTUNGAN ENERGI</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Putar roda untuk mendapatkan hadiah kejutan atau
+                    tantangan bonus menarik!</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8 items-center justify-center">
+                <!-- Roda Berputar dengan SVG Presisi -->
+                <div class="relative w-80 h-80 flex items-center justify-center">
+                    <!-- Pin Pointer -->
+                    <div
+                        class="absolute -top-1 left-1/2 -translate-x-1/2 w-0 h-0 border-x-[15px] border-x-transparent border-t-[30px] border-t-brandOrange z-30 drop-shadow">
+                    </div>
+
+                    <!-- Roda Lingkaran SVG -->
+                    <div
+                        class="w-full h-full rounded-full border-8 border-brandYellow shadow-2xl overflow-hidden bg-slate-100 flex items-center justify-center">
+                        <svg id="spin-wheel-svg" class="w-full h-full wheel-transition" viewBox="0 0 200 200"
+                            style="transform: rotate(0deg);">
+                            <!-- 6 Segments -->
+                            <!-- Seg 1: Biru -->
+                            <path d="M100,100 L100,10 A90,90 0 0,1 177.9,55 Z" fill="#3b82f6" stroke="#ffffff"
+                                stroke-width="2" />
+                            <!-- Seg 2: Hijau -->
+                            <path d="M100,100 L177.9,55 A90,90 0 0,1 177.9,145 Z" fill="#22c55e" stroke="#ffffff"
+                                stroke-width="2" />
+                            <!-- Seg 3: Kuning -->
+                            <path d="M100,100 L177.9,145 A90,90 0 0,1 100,190 Z" fill="#eab308" stroke="#ffffff"
+                                stroke-width="2" />
+                            <!-- Seg 4: Oranye -->
+                            <path d="M100,100 L100,190 A90,90 0 0,1 22.1,145 Z" fill="#f97316" stroke="#ffffff"
+                                stroke-width="2" />
+                            <!-- Seg 5: Ungu -->
+                            <path d="M100,100 L22.1,145 A90,90 0 0,1 22.1,55 Z" fill="#a855f7" stroke="#ffffff"
+                                stroke-width="2" />
+                            <!-- Seg 6: Merah Muda -->
+                            <path d="M100,100 L22.1,55 A90,90 0 0,1 100,10 Z" fill="#ec4899" stroke="#ffffff"
+                                stroke-width="2" />
+
+                            <!-- Teks label melingkar rapi -->
+                            <!-- Rotasi teks dilakukan dengan transformasi relatif ke pusat (100,100) -->
+                            <g transform="rotate(30 100 100)"><text x="100" y="35" fill="white" font-size="7.5"
+                                    font-weight="900" text-anchor="middle">+1 Bintang ⭐</text></g>
+                            <g transform="rotate(90 100 100)"><text x="100" y="35" fill="white" font-size="7.5"
+                                    font-weight="900" text-anchor="middle">+2 Bintang ⭐⭐</text></g>
+                            <g transform="rotate(150 100 100)"><text x="100" y="35" fill="white" font-size="7.5"
+                                    font-weight="900" text-anchor="middle">+3 Bintang ⭐⭐⭐</text></g>
+                            <g transform="rotate(210 100 100)"><text x="100" y="35" fill="white" font-size="7.5"
+                                    font-weight="900" text-anchor="middle">Pertanyaan Bonus 🎯</text></g>
+                            <g transform="rotate(270 100 100)"><text x="100" y="35" fill="white" font-size="7.5"
+                                    font-weight="900" text-anchor="middle">Tepuk Semangat 👏</text></g>
+                            <g transform="rotate(330 100 100)"><text x="100" y="35" fill="white" font-size="7.5"
+                                    font-weight="900" text-anchor="middle">Tantangan Cepat ⚡</text></g>
+
+                            <!-- Center Hub / Poros Tengah -->
+                            <circle cx="100" cy="100" r="18" fill="#ffffff" stroke="#eab308" stroke-width="4" />
+                            <text x="100" y="104" fill="#f97316" font-size="10" font-weight="950"
+                                text-anchor="middle">IPA</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Panel Kontrol Roda -->
+                <div class="flex-1 flex flex-col items-center md:items-start text-center md:text-left space-y-4">
+                    <div class="bg-slate-50 dark:bg-slate-900 border-2 border-brandYellow rounded-2xl p-4 w-full">
+                        <h4 class="font-extrabold text-brandYellow-dark dark:text-brandYellow text-lg">Bagaimana
+                            Aturannya?</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+                            Klik tombol di bawah untuk memutar roda keberuntungan. Segmen roda telah diatur secara rapi
+                            dan presisi untuk memberikan kejutan menarik!
+                        </p>
+                    </div>
+
+                    <div id="wheel-result-box"
+                        class="hidden w-full bg-brandGreen/10 dark:bg-brandGreen/20 border-2 border-brandGreen rounded-2xl p-4 text-center">
+                        <span class="text-xs font-bold text-slate-500 uppercase">Hasil Putaran</span>
+                        <h5 id="wheel-result-text" class="text-xl font-extrabold text-brandGreen mt-1">Mengagumkan!</h5>
+                        <p id="wheel-result-subtext" class="text-xs text-slate-600 dark:text-slate-300 mt-1">Kamu
+                            beruntung sekali.</p>
+                    </div>
+
+                    <div class="flex gap-3 w-full">
+                        <button onclick="spinTheWheel()" id="btn-spin-wheel"
+                            class="flex-1 bg-gradient-to-r from-brandYellow to-brandOrange text-white font-black py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transform transition-all text-sm flex items-center justify-center gap-1">
+                            <i data-lucide="play" class="w-5 h-5 fill-white"></i> Putar Roda!
+                        </button>
+                        <button onclick="completeWheelQuest()" id="btn-spin-continue" disabled
+                            class="hidden flex-1 bg-brandGreen text-white font-black py-4 px-6 rounded-2xl shadow-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-brandGreen-dark transform transition-all text-sm flex items-center justify-center gap-1">
+                            Lanjut Petualangan <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN 6: PETA PETUALANGAN MISI ENERGI -->
+        <section id="page-6"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-xl border-t-8 border-brandGreen hidden flex-col space-y-6">
+            <div class="text-center">
+                <span
+                    class="bg-brandGreen/15 text-brandGreen dark:text-brandGreen-light px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Perjalanan
+                    Berlanjut</span>
+                <h2 class="text-2xl md:text-3xl font-black text-brandGreen mt-2">KITA AKAN MASUK KE MISI BELAJAR</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Peta interaktif menunjukkan progres belajarmu saat
+                    ini.</p>
+            </div>
+
+            <div
+                class="p-6 bg-slate-50 dark:bg-slate-900/60 rounded-3xl border-2 border-dashed border-brandGreen flex flex-col md:flex-row items-center justify-around gap-6">
+                <div
+                    class="text-center bg-white dark:bg-slate-800 p-4 rounded-2xl shadow border-2 border-brandBlue w-48">
+                    <div class="text-4xl animate-bounce-slow">❓</div>
+                    <h4 class="font-bold text-sm text-brandBlue mt-2">Pertanyaan Pemantik</h4>
+                    <span
+                        class="text-[10px] bg-brandBlue/10 text-brandBlue px-2 py-0.5 rounded font-extrabold mt-1 inline-block">Siap
+                        Menjawab</span>
+                </div>
+
+                <div class="text-brandGreen text-2xl rotate-90 md:rotate-0"><i data-lucide="chevrons-right"
+                        class="w-10 h-10 animate-pulse-fast"></i></div>
+
+                <div
+                    class="text-center bg-white dark:bg-slate-800 p-4 rounded-2xl shadow border-2 border-brandYellow w-48">
+                    <div class="text-4xl animate-wiggle">🎥</div>
+                    <h4 class="font-bold text-sm text-brandYellow-dark dark:text-brandYellow mt-2">Video & Materi</h4>
+                    <span
+                        class="text-[10px] bg-brandYellow/10 text-brandYellow-dark dark:text-brandYellow px-2 py-0.5 rounded font-extrabold mt-1 inline-block">Pintu
+                        Terbuka</span>
+                </div>
+
+                <div class="text-brandGreen text-2xl rotate-90 md:rotate-0"><i data-lucide="chevrons-right"
+                        class="w-10 h-10"></i></div>
+
+                <div
+                    class="text-center bg-white dark:bg-slate-800 p-4 rounded-2xl shadow border-2 border-brandOrange w-48">
+                    <div class="text-4xl">🏆</div>
+                    <h4 class="font-bold text-sm text-brandOrange mt-2">Pahlawan Energi</h4>
+                    <span
+                        class="text-[10px] bg-brandOrange/10 text-brandOrange px-2 py-0.5 rounded font-extrabold mt-1 inline-block">Misi
+                        Akhir</span>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-4">
+                <button onclick="goToPage(7)"
+                    class="bg-gradient-to-r from-brandGreen to-emerald-500 text-white font-black py-4 px-10 rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all">
+                    Masuk Pos Pertanyaan Pemantik <i data-lucide="arrow-right" class="w-5 h-5 inline"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- HALAMAN 7: APERSEPSI DAN PERTANYAAN PEMANTIK -->
+        <section id="page-7"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandBlue hidden flex-col space-y-6">
+            <div class="text-center">
+                <span
+                    class="bg-brandBlue/15 text-brandBlue dark:text-brandBlue-light px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Langkah
+                    5: Pertanyaan Pemantik</span>
+                <h2 class="text-2xl md:text-3xl font-black text-brandBlue mt-1">DISKUSI KILAT PETUALANG</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Jawablah pertanyaan cepat ini sebelum waktu habis!
+                    Jawabanmu akan tertempel di papan diskusi digital.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div
+                    class="bg-sky-50 dark:bg-slate-900/60 p-5 rounded-2xl border-2 border-brandBlue flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <span
+                                class="text-xs bg-brandBlue text-white font-extrabold px-3 py-1 rounded-full">Pertanyaan
+                                <span id="pemantik-index-text">1</span>/3</span>
+                            <span
+                                class="text-xs bg-red-500 text-white font-bold px-3 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                                <i data-lucide="timer" class="w-3.5 h-3.5"></i> <span
+                                    id="pemantik-timer-text">30</span>s
+                            </span>
+                        </div>
+
+                        <h3 id="pemantik-question"
+                            class="text-lg font-black text-slate-800 dark:text-slate-100 mt-4 leading-snug">
+                            Mengapa kipas angin bisa berputar ketika kabelnya dicolokkan ke listrik?
+                        </h3>
+                    </div>
+
+                    <div class="space-y-3">
+                        <textarea id="pemantik-answer-input" rows="3" placeholder="Tulis jawaban hebatmu di sini..."
+                            class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm font-medium focus:border-brandBlue focus:outline-none focus:ring-1 focus:ring-brandBlue text-slate-800 dark:text-white"></textarea>
+                        <button onclick="submitPemantikAnswer()"
+                            class="w-full bg-brandBlue hover:bg-brandBlue-dark text-white font-extrabold py-3 rounded-xl shadow active:scale-95 transition-all text-sm flex items-center justify-center gap-1">
+                            Tempel Jawaban di Papan <i data-lucide="sticky-note" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div
+                    class="md:col-span-2 bg-amber-50 dark:bg-slate-900 border-4 border-amber-600 rounded-3xl p-5 relative min-h-[300px]">
+                    <h4
+                        class="font-extrabold text-amber-800 dark:text-brandYellow text-md mb-3 flex items-center gap-1.5">
+                        <i data-lucide="users" class="w-5 h-5 text-amber-700"></i> PAPAN DISKUSI DIGITAL KELAS 4
+                    </h4>
+
+                    <div id="sticky-notes-container"
+                        class="grid grid-cols-2 gap-3 max-h-[250px] overflow-y-auto custom-scrollbar p-1">
+                        <div
+                            class="bg-yellow-100 dark:bg-amber-950 p-3 rounded-xl shadow-md border-l-4 border-brandYellow-dark transform rotate-1">
+                            <p class="text-xs font-bold text-slate-800 dark:text-slate-100">"Karena dicolok listrik lalu
+                                kipasnya dapet energi gerak kak!"</p>
+                            <span
+                                class="block text-[9px] text-slate-500 dark:text-slate-400 mt-2 text-right font-bold">—
+                                Rian (Absen 04)</span>
+                        </div>
+                        <div
+                            class="bg-green-100 dark:bg-emerald-950 p-3 rounded-xl shadow-md border-l-4 border-brandGreen-dark transform -rotate-1">
+                            <p class="text-xs font-bold text-slate-800 dark:text-slate-100">"Listrik diubah menjadi
+                                energi gerak jadi bisa muter."</p>
+                            <span
+                                class="block text-[9px] text-slate-500 dark:text-slate-400 mt-2 text-right font-bold">—
+                                Aisyah (Absen 15)</span>
+                        </div>
+                    </div>
+
+                    <div class="absolute bottom-4 right-4 z-10 hidden">
+                        <button id="btn-next-from-pemantik" disabled onclick="goToPage(8)"
+                            class="bg-slate-300 text-slate-600 dark:bg-slate-700 dark:text-slate-400 font-extrabold px-5 py-2.5 rounded-xl text-xs disabled:cursor-not-allowed hover:bg-brandGreen hover:text-white transition-all flex items-center gap-1 shadow">
+                            Mulai Menonton Video <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN 8: VIDEO PEMBELAJARAN ENERGI -->
+        <section id="page-8"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandYellow hidden flex-col space-y-6">
+            <div class="text-center">
+                <span
+                    class="bg-brandYellow/15 text-brandYellow-dark dark:text-brandYellow px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Langkah
+                    6: Video Pembelajaran</span>
+                <h2 class="text-2xl md:text-3xl font-black text-brandYellow-dark dark:text-brandYellow mt-1">VIDEO
+                    PEMBELAJARAN ENERGI</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Tonton video pembelajaran di bawah ini sampai
+                    selesai untuk mendapatkan bonus bintang dan melanjutkan petualangan!</p>
+            </div>
+
+            <div
+                class="bg-slate-900 rounded-3xl overflow-hidden border-4 border-brandYellow shadow-2xl relative max-w-2xl mx-auto w-full aspect-video">
+                <video id="main-learning-video" class="w-full h-full object-contain" controls
+                    onended="handleVideoEnded()">
+                    <source src="materi.mp4" type="video/mp4">
+                    Browser kamu tidak mendukung pemutaran video HTML5.
+                </video>
+            </div>
+        </section>
+
+        <!-- HALAMAN 9: MATERI PEMBELAJARAN ENERGI -->
+        <section id="page-9"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandGreen hidden flex-col space-y-6">
+            <div class="text-center">
+                <span
+                    class="bg-brandGreen/15 text-brandGreen dark:text-brandGreen-light px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Langkah
+                    7: Misi Belajar Mandiri</span>
+                <h2 class="text-2xl md:text-3xl font-black text-brandGreen mt-1">EKSPLORASI MATERI ENERGI</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Pilih salah satu sub-materi di bawah untuk
+                    membaca, melihat ilustrasi, dan memahami rahasia IPA!</p>
+            </div>
+
+            <div class="flex overflow-x-auto pb-2 gap-2 custom-scrollbar">
+                <button onclick="switchMateriTab(1)" id="tab-materi-1"
+                    class="materi-tab-btn py-2.5 px-4 rounded-xl font-extrabold text-xs whitespace-nowrap border-2 bg-brandGreen text-white border-brandGreen transition-all">
+                    1. Pengertian & Manfaat
+                </button>
+                <button onclick="switchMateriTab(2)" id="tab-materi-2"
+                    class="materi-tab-btn py-2.5 px-4 rounded-xl font-extrabold text-xs whitespace-nowrap border-2 bg-slate-100 border-slate-200 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200 hover:border-brandGreen transition-all">
+                    2. Sumber Energi
+                </button>
+                <button onclick="switchMateriTab(3)" id="tab-materi-3"
+                    class="materi-tab-btn py-2.5 px-4 rounded-xl font-extrabold text-xs whitespace-nowrap border-2 bg-slate-100 border-slate-200 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200 hover:border-brandGreen transition-all">
+                    3. Bentuk & Perubahan
+                </button>
+                <button onclick="switchMateriTab(4)" id="tab-materi-4"
+                    class="materi-tab-btn py-2.5 px-4 rounded-xl font-extrabold text-xs whitespace-nowrap border-2 bg-slate-100 border-slate-200 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200 hover:border-brandGreen transition-all">
+                    4. Penghematan Energi
+                </button>
+            </div>
+
+            <div
+                class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-3xl p-6 min-h-[300px] flex flex-col justify-between">
+
+                <!-- SUB-MATERI 1 -->
+                <div id="content-materi-1" class="materi-content space-y-4">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="w-full md:w-1/2 space-y-3">
+                            <span
+                                class="text-xs bg-brandBlue text-white font-extrabold px-3 py-1 rounded-full uppercase">Bagian
+                                1: Pengertian & Manfaat</span>
+                            <h3 class="text-xl font-extrabold text-slate-800 dark:text-white">Apa itu Energi?</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                                <strong>Energi</strong> adalah kemampuan untuk melakukan usaha (kerja) atau melakukan
+                                suatu perubahan. Tanpa adanya energi, makhluk hidup dan mesin tidak akan dapat
+                                beraktivitas!
+                            </p>
+                            <h4 class="font-bold text-sm text-brandOrange">Mengapa Manusia Membutuhkan Energi?</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Manusia membutuhkan energi kimia dari makanan untuk tumbuh, bergerak, berpikir, dan
+                                mempertahankan suhu tubuh agar tetap hangat.
+                            </p>
+                        </div>
+                        <div
+                            class="w-full md:w-1/2 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 shadow-md flex justify-center">
+                            <div class="text-center space-y-2">
+                                <div class="text-6xl animate-bounce-slow">🏃</div>
+                                <h5 class="font-bold text-xs">Energi = Tenaga Untuk Beraktivitas</h5>
+                                <span class="block text-[10px] text-slate-500">Seperti baterai pada mainan
+                                    mobil-mobilan</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-MATERI 2 -->
+                <div id="content-materi-2" class="materi-content hidden space-y-4">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="w-full md:w-1/2 space-y-3">
+                            <span
+                                class="text-xs bg-brandGreen text-white font-extrabold px-3 py-1 rounded-full uppercase">Bagian
+                                2: Sumber-Sumber Energi</span>
+                            <h3 class="text-xl font-extrabold text-slate-800 dark:text-white">Dari mana energi berasal?
+                            </h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Di sekitar kita ada banyak sumber energi. Sumber energi terbesar di bumi adalah
+                                <strong>Matahari</strong>!
+                            </p>
+
+                            <div class="grid grid-cols-2 gap-2 mt-2">
+                                <div
+                                    class="p-2.5 bg-yellow-100/50 dark:bg-yellow-950/20 rounded-xl border border-yellow-200 text-xs font-semibold">
+                                    ☀️ <strong>Matahari</strong>: Menghasilkan panas & cahaya alami.
+                                </div>
+                                <div
+                                    class="p-2.5 bg-blue-100/50 dark:bg-blue-950/20 rounded-xl border border-blue-200 text-xs font-semibold">
+                                    💧 <strong>Air</strong>: Mengalirkan tenaga untuk turbin PLTA.
+                                </div>
+                                <div
+                                    class="p-2.5 bg-green-100/50 dark:bg-green-950/20 rounded-xl border border-green-200 text-xs font-semibold">
+                                    🌬️ <strong>Angin</strong>: Mendorong kincir angin raksasa.
+                                </div>
+                                <div
+                                    class="p-2.5 bg-purple-100/50 dark:bg-purple-950/20 rounded-xl border border-purple-200 text-xs font-semibold">
+                                    🍎 <strong>Makanan</strong>: Sumber energi kimia manusia.
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="w-full md:w-1/2 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 shadow-md flex justify-center">
+                            <div class="text-center space-y-2">
+                                <div class="text-5xl animate-spin-slow">☀️</div>
+                                <h5 class="font-bold text-xs text-brandOrange">MATAHARI: RAJA ENERGI BUMI</h5>
+                                <p class="text-[10px] text-slate-500">Matahari memancarkan panas yang membantu
+                                    fotosintesis tumbuhan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-MATERI 3 -->
+                <div id="content-materi-3" class="materi-content hidden space-y-4">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="w-full md:w-1/2 space-y-3">
+                            <span
+                                class="text-xs bg-brandOrange text-white font-extrabold px-3 py-1 rounded-full uppercase">Bagian
+                                3: Bentuk & Perubahan Energi</span>
+                            <h3 class="text-xl font-extrabold text-slate-800 dark:text-white">Hukum Kekekalan Energi
+                            </h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Energi tidak dapat diciptakan dan tidak dapat dimusnahkan. Energi hanya bisa
+                                <strong>berubah bentuk</strong> dari satu bentuk ke bentuk yang lain!
+                            </p>
+
+                            <div class="space-y-2 text-xs">
+                                <div
+                                    class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg flex justify-between items-center">
+                                    <span>⚡ Energi Listrik</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-brandOrange"></i>
+                                    <span>🔄 Energi Gerak (Kipas Angin)</span>
+                                </div>
+                                <div
+                                    class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg flex justify-between items-center">
+                                    <span>⚡ Energi Listrik</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-brandOrange"></i>
+                                    <span>🔥 Energi Panas (Magic Com)</span>
+                                </div>
+                                <div
+                                    class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg flex justify-between items-center">
+                                    <span>🍎 Energi Kimia</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-brandOrange"></i>
+                                    <span>🏃 Energi Gerak (Manusia berlari)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="w-full md:w-1/2 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 shadow-md">
+                            <div class="text-center space-y-2">
+                                <div class="text-5xl animate-bounce-slow">💡</div>
+                                <h5 class="font-bold text-xs text-brandBlue">Lampu Menyala</h5>
+                                <p class="text-[10px] text-slate-500">Energi listrik diubah menjadi energi cahaya
+                                    sehingga kamar kita menjadi terang benderang!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-MATERI 4 -->
+                <div id="content-materi-4" class="materi-content hidden space-y-4">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="w-full md:w-1/2 space-y-3">
+                            <span
+                                class="text-xs bg-purple-500 text-white font-extrabold px-3 py-1 rounded-full uppercase">Bagian
+                                4: Penghematan Energi</span>
+                            <h3 class="text-xl font-extrabold text-slate-800 dark:text-white">Pahlawan Penghemat Energi
+                            </h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Persediaan bahan bakar fosil bumi kita terbatas. Kita harus menghemat energi demi
+                                menjaga kelestarian bumi dan menghemat biaya listrik orang tua di rumah!
+                            </p>
+
+                            <ul class="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                                <li class="flex items-center gap-1.5"><i data-lucide="check"
+                                        class="w-4 h-4 text-brandGreen"></i> Matikan lampu saat siang hari atau ruangan
+                                    kosong.</li>
+                                <li class="flex items-center gap-1.5"><i data-lucide="check"
+                                        class="w-4 h-4 text-brandGreen"></i> Cabut colokan charger yang sudah tidak
+                                    terpakai.</li>
+                                <li class="flex items-center gap-1.5"><i data-lucide="check"
+                                        class="w-4 h-4 text-brandGreen"></i> Gunakan air secukupnya dan matikan kran
+                                    yang mengalir.</li>
+                                <li class="flex items-center gap-1.5"><i data-lucide="check"
+                                        class="w-4 h-4 text-brandGreen"></i> Berjalan kaki atau naik sepeda jika
+                                    bepergian jarak dekat.</li>
+                            </ul>
+                        </div>
+                        <div
+                            class="w-full md:w-1/2 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 shadow-md flex justify-center">
+                            <div class="text-center space-y-2">
+                                <div class="text-5xl">🌍</div>
+                                <h5 class="font-bold text-xs text-brandGreen">SELAMATKAN BUMI SEJAK DINI!</h5>
+                                <span class="block text-[10px] text-slate-500">Hemat Energi, Sayangi Masa Depan
+                                    Kita.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="mt-8 pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                    <span class="text-xs font-bold text-slate-400">Pastikan membaca semua tab!</span>
+                    <button onclick="goToPage(10)"
+                        class="bg-gradient-to-r from-brandGreen to-brandYellow text-white font-black py-3 px-8 rounded-2xl shadow hover:scale-[1.01] transition-all text-sm flex items-center gap-1">
+                        Uji Pemahamanmu (Kuis) <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- HALAMAN 10: LATIHAN PEMAHAMAN -->
+        <section id="page-10"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandOrange hidden flex-col space-y-6">
+            <div class="text-center">
+                <span
+                    class="bg-brandOrange/15 text-brandOrange px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Langkah
+                    8: Tantangan Pemahaman</span>
+                <h2 class="text-2xl md:text-3xl font-black text-brandOrange mt-1">UJI NYALI PETUALANG ENERGI</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Jawablah pertanyaan kuis berikut ini dengan teliti
+                    untuk merebut Bintang Energi!</p>
+            </div>
+
+            <div
+                class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-3xl p-6 max-w-xl mx-auto w-full">
+                <div class="flex justify-between text-xs font-bold text-slate-500 mb-4">
+                    <span>Soal <span id="quiz-idx">1</span> dari 5</span>
+                    <span>Bintang Terkumpul: <span id="quiz-earned-stars">0</span> ⭐</span>
+                </div>
+
+                <h3 id="quiz-question-text" class="text-lg font-black text-slate-800 dark:text-white leading-snug mb-5">
+                    Berikut ini yang merupakan sumber energi terbesar bagi planet Bumi adalah...
+                </h3>
+
+                <div id="quiz-options-container" class="space-y-3">
+                    <button
+                        class="w-full text-left p-4 bg-white dark:bg-slate-800 hover:bg-brandOrange/5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 font-bold text-sm transition-all flex items-center justify-between">
+                        <span>A. Minyak Bumi</span>
+                        <i data-lucide="circle" class="w-5 h-5 text-slate-400"></i>
+                    </button>
+                </div>
+
+                <div id="quiz-feedback-box" class="hidden mt-4 p-4 rounded-xl text-center font-bold text-sm"></div>
+
+                <div class="mt-6 flex justify-end">
+                    <button onclick="nextQuizQuestion()" id="btn-next-quiz" disabled
+                        class="hidden bg-slate-300 text-slate-600 dark:bg-slate-700 dark:text-slate-400 font-black py-3 px-8 rounded-xl text-sm disabled:cursor-not-allowed hover:bg-brandGreen hover:text-white transition-all flex items-center gap-1 shadow">
+                        Soal Selanjutnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN 11: HASIL BELAJAR -->
+        <section id="page-11"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandBlue hidden flex-col space-y-6">
+            <div class="text-center">
+                <span
+                    class="bg-brandBlue/15 text-brandBlue dark:text-brandBlue-light px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Hasil
+                    Belajarmu</span>
+                <h2 class="text-2xl md:text-3xl font-black text-brandBlue mt-1">DASHBOARD PAHLAWAN ENERGI</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Inilah statistik pencapaian belajarmu hari ini!
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto w-full">
+                <!-- Kiri: Profil & Nilai -->
+                <div
+                    class="bg-sky-50 dark:bg-slate-900 border-2 border-brandBlue rounded-3xl p-6 flex flex-col items-center justify-center text-center space-y-4">
+                    <div class="w-24 h-24 bg-brandBlue text-white rounded-full flex items-center justify-center text-5xl border-4 border-white shadow-lg animate-bounce-slow"
+                        id="result-avatar-display">
+                        🌍
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-xl text-brandBlue-dark dark:text-brandBlue"
+                            id="result-student-name">Mochammad Reva</h3>
+                        <p class="text-xs text-slate-500 font-bold">No. Absen: <span id="result-student-no">12</span> |
+                            <span id="result-student-class">Kelas 4-A</span>
+                        </p>
+                    </div>
+
+                    <div class="w-full bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-inner border border-slate-200">
+                        <span class="text-xs font-bold text-slate-400 block uppercase">Nilai Akhir</span>
+                        <span class="text-5xl font-black text-brandOrange" id="result-score">90</span>
+                        <p class="text-xs font-bold text-brandGreen mt-1" id="result-category-badge">🏆 Sangat Baik</p>
+                    </div>
+                </div>
+
+                <!-- Kanan: Statistik Rinci -->
+                <div
+                    class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-3xl p-6 flex flex-col justify-between space-y-4">
+                    <h4 class="font-extrabold text-slate-700 dark:text-slate-200 text-sm border-b pb-2">Rincian
+                        Perjalanan Belajar</h4>
+
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between font-bold">
+                            <span class="text-slate-500">Benar</span>
+                            <span class="text-brandGreen" id="result-correct-count">4 Soal</span>
+                        </div>
+                        <div class="flex justify-between font-bold">
+                            <span class="text-slate-500">Salah</span>
+                            <span class="text-red-500" id="result-wrong-count">1 Soal</span>
+                        </div>
+                        <div class="flex justify-between font-bold">
+                            <span class="text-slate-500">Total Bintang Energi</span>
+                            <span class="text-brandYellow-dark dark:text-brandYellow flex items-center gap-1"><i
+                                    data-lucide="star" class="w-4 h-4 fill-brandYellow"></i> <span
+                                    id="result-stars">15</span> Bintang</span>
+                        </div>
+                        <div class="flex justify-between font-bold">
+                            <span class="text-slate-500">Level Tercapai</span>
+                            <span class="text-brandGreen flex items-center gap-1"><i data-lucide="award"
+                                    class="w-4 h-4"></i> Level <span id="result-level">2</span></span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 pt-2">
+                        <button onclick="goToPage(12)"
+                            class="w-full bg-gradient-to-r from-brandOrange to-brandYellow text-white font-black py-3 rounded-xl shadow-md hover:scale-[1.01] transition-all text-xs flex items-center justify-center gap-1">
+                            <i data-lucide="award" class="w-4.5 h-4.5"></i> Klaim Sertifikat Pahlawan Energi
+                        </button>
+                        <button onclick="goToPage(13)"
+                            class="w-full bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-extrabold py-3 rounded-xl transition-all text-xs">
+                            Isi Refleksi Harian (Diary Belajar)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN 12: SERTIFIKAT PAHLAWAN ENERGI -->
+        <section id="page-12"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandYellow hidden flex-col space-y-6">
+            <div class="text-center">
+                <span
+                    class="bg-brandYellow/15 text-brandYellow-dark dark:text-brandYellow px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Langkah
+                    9: Penghargaan Tertinggi</span>
+                <h2 class="text-2xl md:text-3xl font-black text-brandYellow-dark dark:text-brandYellow mt-1">SERAH
+                    TERIMA SERTIFIKAT</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Selamat! Berkat perjuangan belajarmu, kamu resmi
+                    dinobatkan sebagai Pahlawan Energi.</p>
+            </div>
+
+            <div id="certificate-canvas"
+                class="bg-gradient-to-tr from-yellow-50 to-orange-100 p-8 rounded-3xl border-8 border-double border-brandYellow shadow-2xl relative max-w-3xl mx-auto w-full text-center text-slate-800">
+
+                <div class="absolute top-4 left-4 w-12 h-12 border-t-4 border-l-4 border-brandOrange"></div>
+                <div class="absolute top-4 right-4 w-12 h-12 border-t-4 border-r-4 border-brandOrange"></div>
+                <div class="absolute bottom-4 left-4 w-12 h-12 border-b-4 border-l-4 border-brandOrange"></div>
+                <div class="absolute bottom-4 right-4 w-12 h-12 border-b-4 border-r-4 border-brandOrange"></div>
+
+                <div class="space-y-4">
+                    <span class="text-3xl">🏆</span>
+                    <h3 class="text-2xl font-black tracking-widest text-brandOrange uppercase">SERTIFIKAT PAHLAWAN
+                        ENERGI</h3>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Penghargaan Diberikan Kepada
+                        Petualang Hebat:</p>
+
+                    <h4 class="text-3xl font-extrabold text-brandBlue italic py-2 border-b-2 border-dashed border-slate-300 max-w-md mx-auto"
+                        id="cert-student-name">
+                        - NAMA SISWA -
+                    </h4>
+
+                    <p class="text-xs text-slate-600 font-bold">
+                        No. Absen: <span id="cert-student-no">-</span> | Kelas: <span id="cert-student-class">-</span>
+                    </p>
+
+                    <p class="text-sm text-slate-700 leading-relaxed max-w-lg mx-auto font-medium">
+                        Telah berhasil menyelesaikan seluruh rangkaian misi petualangan edukatif pada materi
+                        pembelajaran <strong>IPA: Energi dan Perubahan Bentuk Energi Kelas 4 SD</strong> dengan hasil
+                        yang gemilang.
+                    </p>
+
+                    <div class="flex justify-center items-center gap-12 py-4">
+                        <div>
+                            <span class="text-[10px] text-slate-400 uppercase block font-bold">Nilai Evaluasi</span>
+                            <span class="text-3xl font-black text-brandGreen" id="cert-score">100</span>
+                        </div>
+                        <div
+                            class="w-16 h-16 bg-brandYellow text-white rounded-full flex items-center justify-center text-3xl shadow-lg border-4 border-white animate-pulse">
+                            🏅
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 uppercase block font-bold">Bintang Energi</span>
+                            <span class="text-3xl font-black text-brandOrange flex items-center gap-1 justify-center">
+                                <i data-lucide="star" class="w-5 h-5 fill-brandYellow text-brandYellow"></i> <span
+                                    id="cert-stars">15</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-end pt-4 text-xs font-bold text-slate-500">
+                        <div>
+                            <p>Guru Pembimbing IPA Kelas 4</p>
+                            <p class="mt-8 text-brandOrange text-sm font-black">Ibu Rezkya Nayla</p>
+                        </div>
+                        <div>
+                            <p>Tanggal Belajar</p>
+                            <p class="mt-8 font-black" id="cert-date">18 Juni 2026</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-3">
+                <button onclick="printCertificate()"
+                    class="bg-brandBlue hover:bg-brandBlue-dark text-white font-extrabold py-3 px-6 rounded-xl shadow-md text-sm flex items-center gap-1">
+                    <i data-lucide="printer" class="w-4 h-4"></i> Cetak Sertifikat
+                </button>
+                <button onclick="goToPage(13)"
+                    class="bg-brandGreen hover:bg-brandGreen-dark text-white font-extrabold py-3 px-6 rounded-xl shadow-md text-sm flex items-center gap-1">
+                    Refleksi Belajar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- HALAMAN 13: REFLEKSI PEMBELAJARAN (DIARY DIGITAL) -->
+        <section id="page-13"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandGreen hidden flex-col space-y-6">
+            <div class="text-center">
+                <span
+                    class="bg-brandGreen/15 text-brandGreen dark:text-brandGreen-light px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider">Langkah
+                    10: Refleksi Akhir</span>
+                <h2 class="text-2xl md:text-3xl font-black text-brandGreen mt-1">DIARY DIGITAL PETUALANG</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Tuliskan pengalaman belajarmu hari ini sebagai
+                    bahan evaluasi dan perbaikan bersama Bu Guru!</p>
+            </div>
+
+            <div
+                class="bg-emerald-50 dark:bg-slate-900 border-2 border-brandGreen rounded-3xl p-6 max-w-xl mx-auto w-full space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Bagaimana perasaanmu
+                        belajar hari ini?</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="selectReflectEmotion('sangat-senang')" id="btn-emo-sangat-senang"
+                            class="reflect-emo-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-200 text-center text-sm font-bold flex flex-col items-center hover:border-brandGreen transition-all">
+                            <span class="text-3xl">😍</span>
+                            <span class="text-[10px] mt-1">Sangat Senang</span>
+                        </button>
+                        <button onclick="selectReflectEmotion('senang')" id="btn-emo-senang"
+                            class="reflect-emo-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-200 text-center text-sm font-bold flex flex-col items-center hover:border-brandGreen transition-all">
+                            <span class="text-3xl">😊</span>
+                            <span class="text-[10px] mt-1">Senang</span>
+                        </button>
+                        <button onclick="selectReflectEmotion('biasa')" id="btn-emo-biasa"
+                            class="reflect-emo-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-200 text-center text-sm font-bold flex flex-col items-center hover:border-brandGreen transition-all">
+                            <span class="text-3xl">😐</span>
+                            <span class="text-[10px] mt-1">Biasa Saja</span>
+                        </button>
+                        <button onclick="selectReflectEmotion('sedih')" id="btn-emo-sedih"
+                            class="reflect-emo-btn p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-200 text-center text-sm font-bold flex flex-col items-center hover:border-brandGreen transition-all">
+                            <span class="text-3xl">😔</span>
+                            <span class="text-[10px] mt-1">Sedih</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Berikan rating
+                        bintang untuk petualangan ini:</label>
+                    <div class="flex gap-2">
+                        <button onclick="rateReflect(1)"
+                            class="reflect-star-btn text-3xl text-slate-300 focus:outline-none">★</button>
+                        <button onclick="rateReflect(2)"
+                            class="reflect-star-btn text-3xl text-slate-300 focus:outline-none">★</button>
+                        <button onclick="rateReflect(3)"
+                            class="reflect-star-btn text-3xl text-slate-300 focus:outline-none">★</button>
+                        <button onclick="rateReflect(4)"
+                            class="reflect-star-btn text-3xl text-slate-300 focus:outline-none">★</button>
+                        <button onclick="rateReflect(5)"
+                            class="reflect-star-btn text-3xl text-slate-300 focus:outline-none">★</button>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Hal baru apa yang
+                            kamu pelajari hari ini?</label>
+                        <textarea id="reflect-new-thing" rows="2"
+                            placeholder="Contoh: Bentuk-bentuk energi di sekitar kita..."
+                            class="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-xs font-medium focus:outline-none focus:border-brandGreen text-slate-800 dark:text-white"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Tulis pesan
+                            hangat atau pertanyaan untuk Bu Guru Rezkya:</label>
+                        <textarea id="reflect-teacher-msg" rows="2" placeholder="Pesanmu akan langsung dikirim..."
+                            class="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-xs font-medium focus:outline-none focus:border-brandGreen text-slate-800 dark:text-white"></textarea>
+                    </div>
+                </div>
+
+                <button onclick="submitReflection()" id="btn-submit-reflection" disabled
+                    class="w-full bg-brandGreen hover:bg-brandGreen-dark text-white font-extrabold py-3.5 rounded-2xl shadow active:scale-95 transition-all text-sm flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Kirim Catatan Refleksi <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- HALAMAN 14: PENUTUP -->
+        <section id="page-14"
+            class="page-section bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl border-t-8 border-brandBlue hidden flex-col items-center text-center space-y-6">
+            <div
+                class="relative w-40 h-40 flex items-center justify-center bg-sky-100 dark:bg-sky-950/40 rounded-full border-4 border-dashed border-sky-300 dark:border-sky-800 overflow-hidden shadow-inner">
+                <div class="z-10 animate-bounce">
+                    <svg class="w-28 h-28 mx-auto" viewBox="0 0 100 100" fill="none">
+                        <path d="M50 15C32 15 22 25 22 45C22 65 30 85 50 85C70 85 78 65 78 45C78 25 68 15 50 15Z"
+                            fill="#a855f7" />
+                        <path d="M50 28C38 28 35 38 35 48C35 58 41 62 50 62C59 62 65 58 65 48C65 38 62 28 50 28Z"
+                            fill="#fed7aa" />
+                        <circle cx="43" cy="42" r="3" fill="#1e293b" />
+                        <circle cx="57" cy="42" r="3" fill="#1e293b" />
+                        <path d="M45 51C47 54 53 54 55 51" stroke="#be123c" stroke-width="3" stroke-linecap="round" />
+                        <path d="M15 60C12 55 16 50 19 52C22 54 22 58 22 62" stroke="#fed7aa" stroke-width="4"
+                            stroke-linecap="round" />
+                        <path d="M85 60C88 55 84 50 81 52C78 54 78 58 78 62" stroke="#fed7aa" stroke-width="4"
+                            stroke-linecap="round" />
+                    </svg>
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none text-2xl">
+                    <span class="absolute -top-1 left-2 animate-float-slow">🎈</span>
+                    <span class="absolute -bottom-1 right-2 animate-float-medium">🎈</span>
+                </div>
+            </div>
+
+            <div class="space-y-2 max-w-md">
+                <h3 class="text-2xl font-black text-brandBlue">TERIMA KASIH TELAH BELAJAR!</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-semibold">
+                    "Ilmu yang dipelajari hari ini akan membantu kita memahami dunia di sekitar kita. Teruslah bertanya,
+                    mencoba, dan belajar setiap hari."
+                </p>
+            </div>
+
+            <div
+                class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-3xl p-6 w-full max-w-sm grid grid-cols-3 gap-3">
+                <div class="text-center p-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+                    <span class="text-xs text-slate-400 font-bold block">Bintang</span>
+                    <span
+                        class="text-lg font-black text-brandYellow-dark dark:text-brandYellow flex justify-center items-center gap-0.5 mt-1">
+                        <i data-lucide="star" class="w-4 h-4 fill-brandYellow"></i> <span id="finish-stars">15</span>
+                    </span>
+                </div>
+                <div class="text-center p-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+                    <span class="text-xs text-slate-400 font-bold block">Badge</span>
+                    <span class="text-2xl mt-1 block">⚡🌱</span>
+                </div>
+                <div class="text-center p-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+                    <span class="text-xs text-slate-400 font-bold block">Gelar</span>
+                    <span class="text-[10px] font-black text-brandGreen uppercase block mt-2">Pahlawan</span>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="restartAdventure()"
+                    class="bg-brandBlue hover:bg-brandBlue-dark text-white font-extrabold py-3 px-6 rounded-xl shadow flex items-center gap-1.5 text-sm transition-all">
+                    <i data-lucide="refresh-cw" class="w-4.5 h-4.5"></i> Belajar Lagi
+                </button>
+                <button onclick="goToPage(1)"
+                    class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-white font-extrabold py-3 px-6 rounded-xl shadow flex items-center gap-1.5 text-sm transition-all">
+                    <i data-lucide="home" class="w-4.5 h-4.5"></i> Beranda Utama
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white dark:bg-slate-800 border-t-4 border-brandBlue/30 py-4 mt-12 transition-colors">
+        <div
+            class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-xs font-bold text-slate-500 gap-4">
+            <div class="flex items-center space-x-2">
+                <span>&copy; 2026 Sahabat IPA. Didesain dengan penuh semangat untuk Guru Terbaik Ibu Rezkya
+                    Nayla.</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center gap-1 text-brandBlue">
+                    <i data-lucide="users" class="w-4 h-4"></i> Petualang Aktif Hari Ini: 157 Siswa
+                </div>
+                <div class="flex items-center gap-1 text-brandGreen">
+                    <i data-lucide="database" class="w-4 h-4"></i> Progres Tersimpan Otomatis
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CORE JAVASCRIPT LOGIC -->
+    <script src="app.js"></script>
+</body>
+
+</html>
