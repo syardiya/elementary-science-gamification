@@ -1,5 +1,4 @@
-mkdir -p nginx
-cat << 'EOF' > nginx/default.conf.template
+
 server {
     listen 0.0.0.0:${CONTAINER_PORT};
     server_name _;
@@ -22,4 +21,3 @@ server {
         return 200 "OK - ${APP_NAME} (${APP_ENV}) is running and healthy\n";
     }
 }
-EOF

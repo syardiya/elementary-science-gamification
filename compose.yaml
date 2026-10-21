@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: group01/elementary-science-gamification:week6
+    image: group07/elementary-science-gamification:week6
     container_name: elementary-science-app
     ports:
       - "${HOST_PORT:-8080}:${CONTAINER_PORT:-80}"
