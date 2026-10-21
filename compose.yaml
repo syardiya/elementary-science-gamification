@@ -1,0 +1,12 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: group01/elementary-science-gamification:week6
+    container_name: elementary-science-app
+    ports:
+      - "${HOST_PORT:-8080}:${CONTAINER_PORT:-80}"
+    env_file:
+      - .env
+    restart: unless-stopped
