@@ -1,0 +1,25 @@
+mkdir -p nginx
+cat << 'EOF' > nginx/default.conf.template
+server {
+    listen 0.0.0.0:${CONTAINER_PORT};
+    server_name _;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location ~* \.(mp4|webm|ogg|mp3|wav)$ {
+        expires 7d;
+        add_header Cache-Control "public, no-transform";
+    }
+
+    location = /healthz {
+        access_log off;
+        default_type text/plain;
+        return 200 "OK - ${APP_NAME} (${APP_ENV}) is running and healthy\n";
+    }
+}
+EOF
