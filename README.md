@@ -227,3 +227,20 @@ If you change the host port to `8081`, access the application at `http://localho
 - Use `.env.example` to document the required environment variables.
 - Do not commit passwords, tokens, or other sensitive information.
 - Save screenshots of the verification steps for the project report.
+
+## 14. Handover Test
+
+| Verifier : (Theresia Sgeryl, Group 06, IS Class3) |
+| Device / OS : ( Mackbook ) |
+| Fresh clone  :Successful |
+| Image build : Successful |
+| Application start : uccessful |
+| Core function | /healthz, video, quiz, and spin wheel work as expected |
+
+**Findings and corrections:**
+- Make sure Docker Desktop is running ("Engine running") before running any Docker command.
+- CMD users: replace `cp .env.example .env` with `copy .env.example .env`.
+
+## 15. Contributors
+
+Ardi, Neyra, Ilmi, Therry, Fira
