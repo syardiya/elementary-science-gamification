@@ -243,4 +243,4 @@ If you change the host port to `8081`, access the application at `http://localho
 
 ## 15. Contributors
 
-Ardi, Neyra, Ilmi, Therry, Fira
+Ardi, Neyra, Ilmi, Terry, Fira
