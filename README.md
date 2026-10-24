@@ -230,8 +230,8 @@ If you change the host port to `8081`, access the application at `http://localho
 
 ## 14. Handover Test
 
-| Verifier : (Theresia Sgeryl, Group 06, IS Class3) |
-| Device / OS : ( Mackbook ) |
+| Verifier : Theresia Sgeryl, Group 06, IS Class3 |
+| Device / OS : Windows 11|
 | Fresh clone  :Successful |
 | Image build : Successful |
 | Application start : uccessful |
